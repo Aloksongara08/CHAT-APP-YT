@@ -1,37 +1,36 @@
-import React, { useState } from 'react';
+import React from 'react';
 
-const GenderCheckbox = () => {
-    const [selectedGender, setSelectedGender] = useState({ male: false, female: false });
-
+const GenderCheckbox = ({ selectedGender, onCheckboxChange }) => {
     const handleChange = (event) => {
-        const { name, checked } = event.target;
-        setSelectedGender(prevState => ({ ...prevState, [name]: checked }));
+        onCheckboxChange(event.target.value);
     };
 
     return (
         <div className='flex'>
             <div className='form-control'>
-                <label className='label gap-2 cursor-pointer' htmlFor='male-checkbox'>
+                <label className='label gap-2 cursor-pointer' htmlFor='male-radio'>
                     <span className='label-text'>Male</span>
                     <input
-                        id='male-checkbox'
-                        type='checkbox'
-                        name='male'
-                        className='checkbox border-slate-900'
-                        checked={selectedGender.male}
+                        id='male-radio'
+                        type='radio'
+                        name='gender'
+                        value='male'
+                        className='radio border-slate-900'
+                        checked={selectedGender === 'male'}
                         onChange={handleChange}
                     />
                 </label>
             </div>
             <div className='form-control'>
-                <label className='label gap-2 cursor-pointer' htmlFor='female-checkbox'>
+                <label className='label gap-2 cursor-pointer' htmlFor='female-radio'>
                     <span className='label-text'>Female</span>
                     <input
-                        id='female-checkbox'
-                        type='checkbox'
-                        name='female'
-                        className='checkbox border-slate-900'
-                        checked={selectedGender.female}
+                        id='female-radio'
+                        type='radio'
+                        name='gender'
+                        value='female'
+                        className='radio border-slate-900'
+                        checked={selectedGender === 'female'}
                         onChange={handleChange}
                     />
                 </label>

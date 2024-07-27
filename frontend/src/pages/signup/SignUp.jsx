@@ -1,50 +1,97 @@
-import React from 'react';
-
-// Assuming GenderCheckbox is another component you've defined elsewhere
-import GenderCheckbox from './GenderCheckbox'; 
+import { Link } from 'react-router-dom';
+import GenderCheckbox from "./GenderCheckbox";
+import { useState } from "react";
+import useSignup from "../../hooks/useSignup";
 
 const SignUp = () => {
+  const [inputs, setInputs] = useState({
+    fullName: "",
+    username: "",
+    password: "",
+    confirmPassword: "",
+    gender: "",
+  });
+
+  const { loading, signup } = useSignup();
+
+  const handleCheckboxChange = (gender) => {
+    setInputs({ ...inputs, gender });
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    await signup(inputs);
+  };
+
   return (
-    <div className='flex flex-col items-center justify-center min-w-[24rem] mx-auto'>
+    <div className='flex flex-col items-center justify-center min-w-96 mx-auto'>
       <div className='w-full p-6 rounded-lg shadow-md bg-gray-400 bg-clip-padding backdrop-filter backdrop-blur-lg bg-opacity-0'>
-        <div className='flex items-center justify-center space-x-2 mb-6'>
-          <h1 className='text-3xl font-semibold text-center text-gray-300'>Sign Up</h1>
-          <span className='text-3xl font-semibold text-blue-500'>ChatApp</span>
-        </div>
-        <form>
+        <h1 className='text-3xl font-semibold text-center text-gray-300'>
+          Sign Up <span className='text-blue-500'>ChatApp</span>
+        </h1>
+
+        <form onSubmit={handleSubmit}>
           <div className='mb-4'>
-            <label className='block text-base font-medium text-gray-700'>
-              Full Name
-              <input type='text' placeholder='John Doe' className='w-full mt-1 border border-gray-300 rounded-md py-3 px-4 text-base shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-500 focus:ring-opacity-50' />
+            <label className='label p-2'>
+              <span className='text-base label-text'>Full Name</span>
             </label>
-          </div>
-          <div className='mb-4'>
-            <label className='block text-base font-medium text-gray-700'>
-              Username
-              <input type='text' placeholder='johndoe' className='w-full mt-1 border border-gray-300 rounded-md py-3 px-4 text-base shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-500 focus:ring-opacity-50' />
-            </label>
-          </div>
-          <div className='mb-4'>
-            <label className='block text-base font-medium text-gray-700'>
-              Password
-              <input type='password' placeholder='Enter Password' className='w-full mt-1 border border-gray-300 rounded-md py-3 px-4 text-base shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-500 focus:ring-opacity-50' />
-            </label>
-          </div>
-          <div className='mb-4'>
-            <label className='block text-base font-medium text-gray-700'>
-              Confirm Password
-              <input type='password' placeholder='Confirm Password' className='w-full mt-1 border border-gray-300 rounded-md py-3 px-4 text-base shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-500 focus:ring-opacity-50' />
-            </label>
+            <input
+              type='text'
+              placeholder='John Doe'
+              className='w-full input input-bordered h-10'
+              value={inputs.fullName}
+              onChange={(e) => setInputs({ ...inputs, fullName: e.target.value })}
+            />
           </div>
 
-          <GenderCheckbox />
+          <div className='mb-4'>
+            <label className='label p-2'>
+              <span className='text-base label-text'>Username</span>
+            </label>
+            <input
+              type='text'
+              placeholder='johndoe'
+              className='w-full input input-bordered h-10'
+              value={inputs.username}
+              onChange={(e) => setInputs({ ...inputs, username: e.target.value })}
+            />
+          </div>
 
-          <a className='text-sm hover:underline hover:text-blue-600 mt-2 inline-block' href='#'>
+          <div className='mb-4'>
+            <label className='label'>
+              <span className='text-base label-text'>Password</span>
+            </label>
+            <input
+              type='password'
+              placeholder='Enter Password'
+              className='w-full input input-bordered h-10'
+              value={inputs.password}
+              onChange={(e) => setInputs({ ...inputs, password: e.target.value })}
+            />
+          </div>
+
+          <div className='mb-4'>
+            <label className='label'>
+              <span className='text-base label-text'>Confirm Password</span>
+            </label>
+            <input
+              type='password'
+              placeholder='Confirm Password'
+              className='w-full input input-bordered h-10'
+              value={inputs.confirmPassword}
+              onChange={(e) => setInputs({ ...inputs, confirmPassword: e.target.value })}
+            />
+          </div>
+
+          <GenderCheckbox onCheckboxChange={handleCheckboxChange} selectedGender={inputs.gender} />
+
+          <Link to="/Login" className='text-sm hover:underline hover:text-blue-600 mt-2 inline-block'>
             Already have an account?
-          </a>
+          </Link>
+
           <div className='mt-4'>
-            <button type='submit' className='w-full bg-blue-500 text-white font-semibold py-2 px-4 rounded-md hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-50'>
-              Sign Up
+            <button type='submit' className='w-full bg-blue-500 text-white font-semibold py-2 px-4 rounded-md hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-50' disabled={loading}>
+            {loading ? <span className='loading loading-spinner'></span> : "Sign Up"}
             </button>
           </div>
         </form>

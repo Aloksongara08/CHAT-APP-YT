@@ -1,50 +1,33 @@
-// import React from 'react';
+import { useEffect, useRef } from "react";
+import useGetMessages from "../../hooks/useGetMessages";
+import MessageSkeleton from "../skeletons/MessageSkeleton";
 import Message from "./Message";
+// import useListenMessages from "../../hooks/useListenMessages";
 
 const Messages = () => {
+	const { messages, loading } = useGetMessages();
+	const lastMessageRef = useRef();
+
+	useEffect(() => {
+		setTimeout(() => {
+			lastMessageRef.current?.scrollIntoView({ behavior: "smooth" });
+		}, 100);
+	}, [messages]);
+
+
 	return (
 		<div className='px-4 flex-1 overflow-auto'>
-			<Message />
-			<Message />
-			<Message />
-			<Message />
-			<Message />
-			<Message />
-			<Message />
-			<Message />
-			<Message />
-			<Message />
-			<Message />
-			<Message />
-            <Message />
-			<Message />
-			<Message />
-			<Message />
-			<Message />
-			<Message />
+			{!loading && messages.length > 0 && messages.map((message) => (
+				<div key={message._id} ref={lastMessageRef}>
+					<Message message={message} />
+				</div>
+			))}
+			{loading && [...Array(3)].map((_, idx) => <MessageSkeleton key={idx} />)}
+			{!loading && messages.length === 0 && (
+				<p className='text-center'>Send a message to start the conversation</p>
+			)}
 		</div>
 	);
 };
+
 export default Messages;
-
-// import React from 'react';
-// import Message from "./Message";
-
-// const Messages = () => {
-// 	const messagesData = [
-// 		{ id: 1, text: "Hi, what's up?", time: "12:42" },
-// 		{ id: 2, text: "I'm fine, thank you!", time: "12:43" },
-// 		{ id: 3, text: "How about you?", time: "12:44" },
-// 		{ id: 4, text: "I'm good too.", time: "12:45" }
-// 	];
-
-// 	return (
-// 		<div className='px-4 flex-1 overflow-auto'>
-// 			{messagesData.map((msg) => (
-// 				<Message key={msg.id} message={msg.text} time={msg.time} />
-// 			))}
-// 		</div>
-// 	);
-// };
-
-// export default Messages;
